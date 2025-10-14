@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+  <Document name="ZIRIS-DevHub.ZPM">
+    <Module>
+      <Name>ZIRIS-DevHub</Name>
+      <Version>0.1.0</Version>
+      <Description>IRIS developer hud tools</Description>
+      <Keywords>Terminal, COS</Keywords>
+      <Packaging>module</Packaging>
+      <Resource Name="ZIRIS.PKG"/>
+      <LifecycleClass>%IPM.Lifecycle.Module</LifecycleClass>
+    </Module>
+  </Document>
+</Export>
