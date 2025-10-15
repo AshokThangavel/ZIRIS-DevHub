@@ -118,10 +118,20 @@ Create a new CSP application within the appropriate module folder.
 ## ⚙️ Installation
 
 You can install ZIRIS DevHub by cloning this repository or importing the classes into your IRIS namespace:
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/yourusername/ZIRIS-DevHub.git
+2. **Navigate to the project directory**:
 
-```bash
-git clone https://github.com/yourusername/ZIRIS-DevHub.git
-````
+   ```bash
+   cd ZIRIS-DevHub
+   ```
+
+3. **Run the docker compose file**:
+
+   ```bash
+   docker compose -f docker-compose.yml up -d --build
+   ```
 
 Then, in the IRIS terminal:
 
