@@ -21,17 +21,37 @@ To maintain clarity, scalability, and ease of navigation, the following **packag
 ```
 
 ZIRIS.DevHub
-├── Home.cls               ; Central launcher / main page for the toolkit
-├── Tools                  ; General developer tools
-│   └── [Action].cls       ; e.g., BookmarkLauncher.cls
-├── Admin                  ; Admin-related tools and screens
-│   └── [Action].cls       ; e.g., ShowGlobals.cls
-├── Errors                 ; Error handling and viewer tools
-│   └── [Action].cls       ; e.g., ViewErrors.cls
-├── CSP                    ; Custom CSP pages and components
-│   └── [Action].cls       ; e.g., ErrorViewer.cls
-└── Utils                  ; Utility and helper classes
-└── [Function].cls     ; e.g., StringHelper.cls
+├── Home.cls                       ; Central CSP launcher for the DevHub portal
+
+├── Portal\                        ; CSP base classes and layout helpers
+│   ├── Template.cls               ; Base class for CSP pages (extends %CSP.Page)
+│   └── Projection.cls             ; Logic used by Template (e.g., dynamic layout/rendering)
+
+├── Base\                          ; Shared non-UI logic and utilities
+│   ├── StringHelper.cls           ; String utilities
+│   ├── DateUtils.cls              ; Date/time utilities
+│   └── Constants.cls              ; Shared constant values
+
+├── Tools\                         ; Developer tools (feature-focused)
+│   ├── BookmarkLauncher.cls       ; Tool logic
+│   └── BookmarkLauncherPage.cls   ; CSP page for the tool (extends Template)
+
+├── Admin\                         ; Admin tools and utilities
+│   ├── ShowGlobals.cls            ; Displays system globals
+│   └── GlobalManagerPage.cls      ; CSP page for managing globals
+
+├── Errors\                        ; Error handling (UI and logic)
+│   ├── ViewErrors.cls             ; Logic for viewing error logs
+│   └── ViewErrorsPage.cls         ; CSP page to display error logs
+
+├── CSP\                           ; Generic/shared CSP pages (not tied to specific module)
+│   ├── ErrorViewer.cls            ; Shared error display page
+│   └── CSPDiagnostics.cls         ; General-purpose diagnostics page
+
+└── Utils\                         ; Optional extra utilities (can be merged into Base)
+    ├── Logger.cls                 ; Logging utility
+    └── ConfigLoader.cls           ; Configuration helper
+
 
 ```
 
