@@ -1,4 +1,4 @@
-Class ZIRIS.DevHub.Home Extends %CSP.Page
+Class ZIRIS.DevHub.Home Extends ZIRIS.DevHub.Portal.Template
 {
 Parameter Title As STRING [ Final ] = "IRIS DevHubTools";
 

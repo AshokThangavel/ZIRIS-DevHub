@@ -1,4 +1,4 @@
-Class ZIRIS.DevHub.FHIR.FSLog Extends ZIRIS.DevHub.Template
+Class ZIRIS.DevHub.FHIR.FSLog Extends ZIRIS.DevHub.Portal.Template
 {
 Parameter TableHeader As STRING = "Location,Type,Message,TimeStamp,jobNumber";
 

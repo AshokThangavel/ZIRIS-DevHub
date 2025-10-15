@@ -1,4 +1,4 @@
-Class ZIRIS.DevHub.Errors.Erralyzer Extends ZIRIS.DevHub.Template
+Class ZIRIS.DevHub.Errors.Erralyzer Extends ZIRIS.DevHub.Portal.Template
 {
 
 Parameter Title As STRING [ Final ] = "Erralyzer";

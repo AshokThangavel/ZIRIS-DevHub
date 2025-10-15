@@ -1,4 +1,4 @@
-Class ZIRIS.DevHub.Admin.Config.Dashboard Extends ZIRIS.DevHub.Template
+Class ZIRIS.DevHub.Admin.Config.Dashboard Extends ZIRIS.DevHub.Portal.Template
 {
 Parameter APPLICATION = "IRIS Configuration Dashboard";
 

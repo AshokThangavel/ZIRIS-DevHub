@@ -4,6 +4,10 @@ ClassMethod IsScreenExist(pClass) [ CodeMode = expression ]
 {
 ##class(ZIRIS.DevHub.DB.DevTools).%ExistsId(pClass)
 }
+ClassMethod DeleteDevTool(pClass) [ CodeMode = expression ]
+{
+##class(ZIRIS.DevHub.DB.DevTools).%DeleteId(pClass)
+}
 
 ClassMethod CreateNewToolIntoList(pToolInfo As %DynamicObject) As %Status
 {
@@ -28,5 +32,6 @@ ClassMethod GetToolsList()
 		})
 	}
 	Return response.%ToJSON()
-    }
+}
+
 }
