@@ -1,5 +1,5 @@
 # ZIRIS-DevHub
-Welcome to **ZIRIS DevHub** — a centralized toolkit and launcher framework designed for InterSystems IRIS developers.  
+Welcome to **ZIRIS DevHub**🛠️ — a centralized toolkit and launcher framework designed for InterSystems IRIS developers.  
 Easily organize, access, and extend developer tools, admin utilities, CSP pages, and more — all in one place.
 
 ---
@@ -9,12 +9,15 @@ Easily organize, access, and extend developer tools, admin utilities, CSP pages,
 `ZIRIS.DevHub` provides a **centralized home page** (`ZIRIS.DevHub.Home.cls`) that acts as the launchpad for all your development and admin tools.  
 This modular framework enables developers to quickly navigate and manage various utilities built as individual classes.
 
+Note: Recompile the "ZIRIS.DevHub.Template" class to get the screens in ZIRIS.DevHub.Home.cls
+
 ---
 
 ## 📦 Package Structure & Naming Convention
 
 To maintain clarity, scalability, and ease of navigation, the following **package structure** and **naming convention** is used:
 
+<b>Note: CSP classes can be included in any of the packages below if needed.</b>
 ```
 
 ZIRIS.DevHub
@@ -54,7 +57,11 @@ ZIRIS.DevHub.[Module].[Action/Function].cls
 3. Open the main launcher page by navigating to:
 
 ```CSP
-/ZIRIS.DevHub.Home.cls
+ZIRIS.DevHub.Home.cls is the Home class you can access all developer tools here
+
+e.g
+http://server:[port]/namespacecsp/ZIRIS.DevHub.Home.cls
+http://172.23.125.184:52773/csp/user/ZIRIS.DevHub.Home.cls
 ````
 
 4. From the Home page, access all available tools and utilities in one place.
@@ -72,8 +79,39 @@ We welcome contributions from the community! To contribute:
 
    * Use the `ZIRIS.DevHub.[Module].[Action/Function].cls` format.
    * Organize classes under the appropriate module folder.
+   * Use ZIRIS.DevHub.Template super class for CSP Applications( %CSP.Page)
 5. Write clear commit messages.
 6. Submit a pull request with a description of your changes.
+
+## 🌐 New CSP Application
+
+Create a new CSP application within the appropriate module folder.
+
+### Steps:
+
+1. **Extend the Base Template**  
+   Your CSP class should extend:  
+   ```objectscript
+   ZIRIS.DevHub.Template
+
+2. **Add Required Parameters**
+
+   * `CATEGORY` — Used for sorting or grouping the application.
+   * `APPLICATION` — The display name of your application.
+
+3. **Describe the Application**
+
+   * Implement the `AppDescription()` class method to return a brief description of your application.
+
+   Example:
+
+   ```objectscript
+   ClassMethod AppDescription() As %String
+   {
+       return "This tool allows developers to view and manage global variables."
+   }
+   ```
+
 
 ---
 
@@ -95,7 +133,7 @@ do $System.OBJ.LoadDir("/path/to/ZIRIS-DevHub/src", "ck")
 *Or*, if published as a ZPM package, you can install via:
 
 ```objectscript
-zpm:USER> install zirisd devhub
+zpm:USER> install ZIRIS-DevHub
 ```
 
 ---
