@@ -288,7 +288,8 @@ ClassMethod Scripts()
                     </div>
                 </div>
                 <div class="tool-body">
-                    <div class="tool-description">${tool.description}</div>
+                    <!--div class="tool-description">${tool.description}</div-->
+                    <div class="tool-description" title="${tool.description}">${tool.description.length > 35 ? tool.description.substring(0, 35) + '…' : tool.description}</div>
                     <div class="tool-invocation">
                         ${tool.cls}
                         <button class="copy-btn" data-cls="${tool.cls}">

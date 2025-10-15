@@ -1,10 +1,13 @@
-Class ZIRIS.DevHub.DB.Utils Extends %RegisteredObject
+Class ZIRIS.DevHub.DB.Utils Extends %SYSTEM.Help
 {
-
+ClassMethod IsScreenExist(pClass) [ CodeMode = expression ]
+{
+##class(ZIRIS.DevHub.DB.DevTools).%ExistsId(pClass)
+}
 
 ClassMethod CreateNewToolIntoList(pToolInfo As %DynamicObject) As %Status
 {
-	Set obj = ##class(ZIRIS.DevHub.DB.ToolDetails).%New()
+	Set obj = ##class(ZIRIS.DevHub.DB.DevTools).%New()
 	Set obj.ToolName = pToolInfo.Name
 	Set obj.Category = pToolInfo.category
 	Set obj.Description = pToolInfo.description
@@ -14,7 +17,7 @@ ClassMethod CreateNewToolIntoList(pToolInfo As %DynamicObject) As %Status
 
 ClassMethod GetToolsList()
 {
-	Set tStatement = ##class(%SQL.Statement).%ExecDirect(, "SELECT * FROM ZIRIS_DevHub_DB.ToolDetails")
+	Set tStatement = ##class(%SQL.Statement).%ExecDirect(, "SELECT * FROM ZIRIS_DevHub_DB.DevTools")
 	Set response = []
 	While tStatement.%Next() {
 		Do response.%Push({
