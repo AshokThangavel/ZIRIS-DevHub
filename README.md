@@ -9,8 +9,6 @@ Easily organize, access, and extend developer tools, admin utilities, CSP pages,
 `ZIRIS.DevHub` provides a **centralized home page** (`ZIRIS.DevHub.Home.cls`) that acts as the launchpad for all your development and admin tools.  
 This modular framework enables developers to quickly navigate and manage various utilities built as individual classes.
 
-Note: Recompile the "ZIRIS.DevHub.Template" class to get the screens in ZIRIS.DevHub.Home.cls
-
 ---
 
 ## 📦 Package Structure & Naming Convention
