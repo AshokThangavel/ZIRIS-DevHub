@@ -733,7 +733,7 @@ body.dark-mode {background-color: #1a202c; color: #e2e8f0;} body.dark-mode heade
 	</data>
 }
 
-Method Scripts()
+ClassMethod Scripts()
 {
 
 	&HTML<

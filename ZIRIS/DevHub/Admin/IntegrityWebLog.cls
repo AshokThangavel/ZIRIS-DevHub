@@ -1,57 +1,21 @@
 Class ZIRIS.DevHub.Admin.IntegrityWebLog Extends ZIRIS.DevHub.Portal.Template
 {
-
-Parameter Title As STRING [ Final ] = "Integrity Log";
+Parameter Title As STRING = "Integrity Log";
 
 Parameter APPLICATION As STRING = "Integrity Log";
 
-ClassMethod OnPage() As %Status
-{
-	Do ..OnPageCSPROOT()
-	Return $$$OK
-}
-
-ClassMethod OnPageCSPROOT() As %Boolean
-{
-	Do ..OnPageHTML()
-}
-
-ClassMethod OnPageHTML() As %Boolean
-{
-	Write "<html>"
-	Write !
-	Do ..OnPageHEAD()
-	Do ..OnPageBODY()
-	Write !,"</html>"
-	Return $$$OK
-}
-
 ClassMethod OnPageHEAD() As %Boolean
 {
-	Write "<head>",!
-	Write "<meta charset=""UTF-8"">"
-	write "<meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">"
+	Do ##super()
 	Write "<link rel=""shortcut icon"" href=""portal/ISC_IRIS_icon.ico"">"
-	Write !,"<title>"_..#Title_"</title>",!
 	Write " <link rel=""stylesheet"" href=""https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"">",!
-	Write "<style>",!
-	Do ..LoadCSS()
-	Write "</style>",!
 	Write "<link href=""https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"" rel=""stylesheet"">"
 	Write "<link rel=""stylesheet"" href=""https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css"">"
 	Write "<link rel=""stylesheet"" href=""https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css"">"
-	Write "</head>",!
-	Write ..HyperEventHead(0,0)
 	Return $$$OK
 }
 
-ClassMethod OnPageBODY() As %Boolean
-{
-	Do ..ShowIntegrityLogs()
-	Return $$$OK
-}
-
-ClassMethod ShowIntegrityLogs() As %Status
+ClassMethod RenderScreen() As %Status
 {
 	&HTML<
 <body>
@@ -120,17 +84,7 @@ ClassMethod ShowIntegrityLogs() As %Status
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
 </body>
 	>
-	Do ..Scripts()
-}
-
-ClassMethod LoadCSS()
-{
-	Set obj = ##class(%Dictionary.CompiledXData).%OpenId($Classname()_"||Style")
-	Return:(obj = "") $$$OK
-	Set xdata = obj.Data
-	Set status = ##class(%XML.TextReader).ParseStream(xdata, .textreader)
-	While textreader.Read() { If (textreader.NodeType="chars") { Write textreader.Value } }
-	Return $$$OK
+	Do ##super()
 }
 
 XData Style
@@ -358,5 +312,4 @@ ClassMethod Scripts()
     </script>
 	>
 }
-
 }
