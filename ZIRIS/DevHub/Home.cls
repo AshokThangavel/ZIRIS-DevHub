@@ -2,51 +2,25 @@ Class ZIRIS.DevHub.Home Extends ZIRIS.DevHub.Portal.Template
 {
 Parameter Title As STRING [ Final ] = "IRIS DevHubTools";
 
-ClassMethod OnPage() As %Status
-{
-	Do ..OnPageCSPROOT()
-	Return $$$OK
-}
-
-ClassMethod OnPageCSPROOT() As %Boolean
-{
-	Do ..OnPageHTML()
-}
-
-ClassMethod OnPageHTML() As %Boolean
-{
-	Write "<html>"
-	Write !
-	Do ..OnPageHEAD()
-	Do ..OnPageBODY()
-	Write !,"</html>"
-	Return $$$OK
-}
+Parameter APPLICATION As STRING = "IRIS DevHubTools";
 
 ClassMethod OnPageHEAD() As %Boolean
 {
-	Write "<head>",!
-	Write "<meta charset=""UTF-8"">"
-	write "<meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">"
+	Do ##super()
 	Write "<link rel=""shortcut icon"" href=""portal/ISC_IRIS_icon.ico"">"
-	Write !,"<title>"_..#Title_"</title>",!
 	Write " <link rel=""stylesheet"" href=""https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"">",!
-	Write "<style>",!
-	Do ..LoadCSS()
-	Write "</style>",!
-	Write "</head>",!
-	Write ..HyperEventHead(0,0)
 	Return $$$OK
 }
 
-ClassMethod OnPageBODY() As %Boolean
+ClassMethod RenderScreen()
 {
-	Do ..ShowDevTools()
-	Return $$$OK
+	Do ..RenderHomeScreen()
+	Do ##super()
 }
 
-ClassMethod ShowDevTools()
+ClassMethod RenderHomeScreen()
 {
+
 	&HTML<
 	<body>
     <header>
@@ -155,18 +129,6 @@ ClassMethod ShowDevTools()
         <span id="notification-message">Copied to clipboard!</span>
     </div>
 	>
-	Do ..Scripts()
-	Return $$$OK
-}
-
-ClassMethod LoadCSS()
-{
-	Set obj = ##class(%Dictionary.CompiledXData).%OpenId($Classname()_"||Style")
-	Return:(obj = "") $$$OK
-	Set xdata = obj.Data
-	Set status = ##class(%XML.TextReader).ParseStream(xdata, .textreader)
-	While textreader.Read() { If (textreader.NodeType="chars") { Write textreader.Value } }
-	Return $$$OK
 }
 
 XData Style
@@ -279,9 +241,9 @@ ClassMethod Scripts()
 
             card.innerHTML = `
                 <div class="tool-header">
-                    <div class="tool-icon">
+                    <!--div class="tool-icon">
                         <i class="${tool.icon}"></i>
-                    </div>
+                    </div-->
                     <div>
                         <div class="tool-title">${tool.name}</div>
                         <span class="tool-category">${tool.category}</span>

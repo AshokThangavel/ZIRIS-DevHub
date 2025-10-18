@@ -1,55 +1,21 @@
 /// View swagger json for web applications
 Class ZIRIS.DevHub.Tools.Swagger.JsonViewer Extends ZIRIS.DevHub.Portal.Template
 {
-
 Parameter Title As STRING [ Final ] = "SwaggerJsonViewer";
 
 Parameter APPLICATION As STRING = "SwaggerJsonViewer";
 
 Parameter CATEGORY = "LOGS";
 
-ClassMethod OnPage() As %Status
-{
-	Do ..OnPageCSPROOT()
-	Return $$$OK
-}
-
-ClassMethod OnPageCSPROOT() As %Boolean
-{
-	Do ..OnPageHTML()
-}
-
-ClassMethod OnPageHTML() As %Boolean
-{
-	Write "<html>"
-	Write !
-	Do ..OnPageHEAD()
-	Do ..OnPageBODY()
-	Write !,"</html>"
-	Return $$$OK
-}
-
 ClassMethod OnPageHEAD() As %Boolean
 {
-	Write "<head>",!
+	Do ##super()
 	Write "<link rel=""shortcut icon"" href=""portal/ISC_IRIS_icon.ico"">"
-	Write !,"<title>"_..#Title_"</title>",!
 	Write " <link rel=""stylesheet"" href=""https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"">",!
-	Write "<style>",!
-	Do ..LoadCSS()
-	Write "</style>",!
-	Write "</head>",!
-	W ..HyperEventHead(0,0)
 	Return $$$OK
 }
 
-ClassMethod OnPageBODY() As %Boolean
-{
-	Do ..RenderSwaggerAPIInfo()
-	Return $$$OK
-}
-
-ClassMethod RenderSwaggerAPIInfo() As %Status
+ClassMethod RenderScreen() As %Status
 {
 	&HTML<
 	<!DOCTYPE html>
@@ -139,18 +105,7 @@ ClassMethod RenderSwaggerAPIInfo() As %Status
 </body>
 </html>
 	>
-	Do ..Scripts()
-	q 1
-}
-
-ClassMethod LoadCSS()
-{
-	Set obj = ##class(%Dictionary.CompiledXData).%OpenId($Classname()_"||Style")
-	Return:(obj = "") $$$OK
-	Set xdata = obj.Data
-	Set status = ##class(%XML.TextReader).ParseStream(xdata, .textreader)
-	While textreader.Read() { If (textreader.NodeType="chars") { Write textreader.Value } }
-	Return $$$OK
+	Do ##super()
 }
 
 XData Style

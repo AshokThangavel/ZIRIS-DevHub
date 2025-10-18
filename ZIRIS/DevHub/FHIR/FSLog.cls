@@ -1,22 +1,26 @@
 Class ZIRIS.DevHub.FHIR.FSLog Extends ZIRIS.DevHub.Portal.Template
 {
-Parameter TableHeader As STRING = "Location,Type,Message,TimeStamp,jobNumber";
+Parameter Title As STRING [ Final ] = "FSLOG";
 
 Parameter APPLICATION = "FSLOG";
 
 Parameter CATEGORY = "FHIR";
 
-ClassMethod OnPage() As %Status
+ClassMethod OnPageHEAD() As %Boolean
 {
-	#define del "|"
-	write "<head>"
+	Do ##super()
+	Write "<link rel=""shortcut icon"" href=""portal/ISC_IRIS_icon.ico"">"
 	write "<link rel=""stylesheet"" href=""https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css"">"
 	write "<link rel=""stylesheet"" href=""https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css"">"
 	write "<script src=""https://code.jquery.com/jquery-3.7.0.js""></script>"
 	write "<script src=""https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js""></script>"
 	write "<script src=""https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js""></script>"
-	write "</head>"
-	write "<title>FSLOG</title>"
+	Return $$$OK
+}
+
+ClassMethod RenderScreen() As %Status
+{
+	#define del "|"
 	write "<body>"
 	write "<div>"
 	write "<img class=""portalLogo"" src=""portal/InterSystems IRIS.png"">"
@@ -27,7 +31,7 @@ ClassMethod OnPage() As %Status
 	write " <table id=""example"" class=""table table-striped"" style=""width:100%;padding: 0.1rem 0.1rem;font-size:12px;"">"
 	write " <thead class='table-header'>"
 	write "<tr>"
-	set header = $listfromstring(..#TableHeader)
+	set header = $listfromstring("Location,Type,Message,TimeStamp,jobNumber")
 	set ptr=0
 	while $listnext(header,ptr,head) {
 		write "<th style='background-color:#333695;color:white;'>"_head_"</th>"
@@ -63,8 +67,4 @@ ClassMethod OnPage() As %Status
 	return $$$OK
 }
 
-ClassMethod OnPageHEAD() As %Boolean
-{
-	Do ..HyperEventHead(0,0)
-}
 }

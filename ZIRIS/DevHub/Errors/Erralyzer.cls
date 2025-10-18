@@ -1,6 +1,5 @@
 Class ZIRIS.DevHub.Errors.Erralyzer Extends ZIRIS.DevHub.Portal.Template
 {
-
 Parameter Title As STRING [ Final ] = "Erralyzer";
 
 Parameter APPLICATION As STRING = "Erralyzer";
@@ -9,38 +8,11 @@ Parameter ERR [ Final, Internal ] = "^ERRORS";
 
 Parameter CATEGORY = "LOGS";
 
-ClassMethod OnPage() As %Status
-{
-	Do ..OnPageCSPROOT()
-	Return $$$OK
-}
-
-ClassMethod OnPageCSPROOT() As %Boolean
-{
-	Do ..OnPageHTML()
-}
-
-ClassMethod OnPageHTML() As %Boolean
-{
-	Write "<html>"
-	Write !
-	Do ..OnPageHEAD()
-	Do ..OnPageBODY()
-	Write !,"</html>"
-	Return $$$OK
-}
-
 ClassMethod OnPageHEAD() As %Boolean
 {
-	Write "<head>",!
+	Do ##super()
 	Write "<link rel=""shortcut icon"" href=""portal/ISC_IRIS_icon.ico"">"
-	Write !,"<title>"_..#Title_"</title>",!
 	Write " <link rel=""stylesheet"" href=""https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"">",!
-	Write "<style>",!
-	Do ..LoadCSS()
-	Write "</style>",!
-	Write "</head>",!
-	W ..HyperEventHead(0,0)
 	Return $$$OK
 }
 
@@ -1410,7 +1382,6 @@ ClassMethod BuildErrorMsgResponse(date, counter) As %DynamicObject
 
 ClassMethod AppDescription() [ CodeMode = expression ]
 {
-"View the application error logs"
+"View the error logs"
 }
-
 }
