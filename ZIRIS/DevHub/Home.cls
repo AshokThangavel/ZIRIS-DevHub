@@ -12,15 +12,8 @@ ClassMethod OnPageHEAD() As %Boolean
 	Return $$$OK
 }
 
-ClassMethod RenderScreen()
+ClassMethod OnRenderScreen()
 {
-	Do ..RenderHomeScreen()
-	Do ##super()
-}
-
-ClassMethod RenderHomeScreen()
-{
-
 	&HTML<
 	<body>
     <header>

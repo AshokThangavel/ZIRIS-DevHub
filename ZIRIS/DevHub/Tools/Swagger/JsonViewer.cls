@@ -15,7 +15,7 @@ ClassMethod OnPageHEAD() As %Boolean
 	Return $$$OK
 }
 
-ClassMethod RenderScreen() As %Status
+ClassMethod OnRenderScreen() As %Status
 {
 	&HTML<
 	<!DOCTYPE html>
@@ -99,13 +99,9 @@ ClassMethod RenderScreen() As %Status
             </div>
         </div>
     </div>
-
-
-
 </body>
 </html>
 	>
-	Do ##super()
 }
 
 XData Style
@@ -124,9 +120,7 @@ ClassMethod Scripts()
 	&HTML<
 	<script language="javascript">
 		//const serverURL = #server(..GetServerDetails())#;
-
-		document.addEventListener('DOMContentLoaded', function() {
-    // DOM Elements
+	document.addEventListener('DOMContentLoaded', function() {
     const appListView = document.getElementById('app-list-view');
     const swaggerView = document.getElementById('swagger-view');
     const loadingApps = document.getElementById('loading-apps');
@@ -145,9 +139,6 @@ ClassMethod Scripts()
     const rawSpec = document.getElementById('raw-spec');
     const rawSpecContent = document.getElementById('raw-spec-content');
     const manualRenderButton = document.getElementById('manual-render-button');
-
-    // Define serverURL if not already defined
-    //const serverURL = serverURL || 'http://localhost'; // Replace with your actual server URL
 
     // Global variables
     let currentSpec = null;

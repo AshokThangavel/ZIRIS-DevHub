@@ -55,9 +55,12 @@ ClassMethod OnPageBODY() As %Boolean
 /// Override this method to render your screens in UI
 ClassMethod RenderScreen()
 {
+	Do ..OnRenderScreen()
 	Do ..Scripts()
 }
-
+ClassMethod OnRenderScreen()
+{
+}
 ClassMethod LoadCSS()
 {
 	Set obj = ##class(%Dictionary.CompiledXData).%OpenId($Classname()_"||Style")

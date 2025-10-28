@@ -18,7 +18,7 @@ ClassMethod OnPageHEAD() As %Boolean
 	Return $$$OK
 }
 
-ClassMethod RenderScreen() As %Status
+ClassMethod OnRenderScreen() As %Status
 {
 	#define del "|"
 	write "<body>"
