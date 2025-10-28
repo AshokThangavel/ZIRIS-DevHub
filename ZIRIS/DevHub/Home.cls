@@ -14,7 +14,7 @@ ClassMethod OnPageHEAD() As %Boolean
 
 ClassMethod OnRenderScreen()
 {
-	&HTML<
+    &HTML<
 	<body>
     <header>
         <div class="container">
@@ -38,6 +38,9 @@ ClassMethod OnRenderScreen()
                             <span class="stat-label">Categories</span>
                         </div>
                     </div>
+                    <button class="view-toggle" id="view-toggle" title="Toggle view">
+                        <i class="fas fa-list"></i>
+                    </button>
                     <button class="theme-toggle" id="theme-toggle" title="Toggle dark mode">
                         <i class="fas fa-moon"></i>
                     </button>
@@ -56,7 +59,7 @@ ClassMethod OnRenderScreen()
             </button>
         </div>
 
-        <div class="tools-grid" id="tools-grid">
+        <div class="tools-grid" id="tools-container">
             <!-- Tools will be dynamically added here -->
         </div>
 
@@ -88,7 +91,7 @@ ClassMethod OnRenderScreen()
                     </div>
                     <div class="form-group">
                         <label class="form-label" for="tool-execution">Execution</label>
-                        <input type="text" class="form-input" id="tool-execution" placeholder="e.g., qcpr.acw.clindoc.tools.NewTool.cls" required>
+                        <input type="text" class="form-input" id="tool-execution" placeholder="e.g., tools.NewTool.cls" required>
                     </div>
                     <div class="form-group">
                         <label class="form-label" for="tool-category">Category</label>
@@ -116,11 +119,11 @@ ClassMethod OnRenderScreen()
             </div>
         </div>
     </div>
-
     <div class="notification" id="notification">
         <i class="fas fa-check-circle"></i>
         <span id="notification-message">Copied to clipboard!</span>
     </div>
+   </body>
 	>
 }
 
@@ -128,7 +131,7 @@ XData Style
 {
 <data>
 	<![CDATA[
-	:root{--primary:#4361ee;--primary-dark:#3a56d4;--secondary:#3f37c9;--background:#f8f9fa;--card-bg:#fff;--text-primary:#212529;--text-secondary:#6c757d;--border:#e9ecef;--shadow:rgba(0,0,0,0.1);--success:#4cc9f0;--warning:#f72585;--modal-overlay:rgba(0,0,0,0.5)}[data-theme=dark]{--primary:#5e72e4;--primary-dark:#4c63d2;--secondary:#825ee4;--background:#1a1d29;--card-bg:#252836;--text-primary:#f8f9fa;--text-secondary:#adb5bd;--border:#343946;--shadow:rgba(0,0,0,0.3);--success:#1de9b6;--warning:#f5365c;--modal-overlay:rgba(0,0,0,0.7)}*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif}body{background-color:var(--background);color:var(--text-primary);line-height:1.6;transition:background-color .3s ease,color .3s ease}.container{max-width:1400px;margin:0 auto;padding:20px}header{background-color:var(--card-bg);box-shadow:0 2px 10px var(--shadow);padding:15px 0;margin-bottom:20px;position:sticky;top:0;z-index:100;transition:background-color .3s ease}.header-content{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:15px}.logo{display:flex;align-items:center;gap:10px}.logo i{font-size:22px;color:var(--primary)}.logo h1{font-size:20px;font-weight:600;color:var(--primary)}.search-container{position:relative;width:100%;max-width:450px}.search-box{width:100%;padding:10px 20px 10px 40px;border:1px solid var(--border);border-radius:30px;font-size:15px;transition:all .3s ease;background-color:var(--background);color:var(--text-primary)}.search-box:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(67,97,238,0.2)}.search-icon{position:absolute;left:15px;top:50%;transform:translateY(-50%);color:var(--text-secondary)}.header-controls{display:flex;align-items:center;gap:15px}.stats{display:flex;gap:15px;align-items:center}.stat-item{display:flex;flex-direction:column;align-items:center}.stat-value{font-size:18px;font-weight:600;color:var(--primary)}.stat-label{font-size:11px;color:var(--text-secondary)}.theme-toggle{background:none;border:none;color:var(--text-primary);cursor:pointer;font-size:18px;padding:5px;border-radius:50%;transition:all .3s ease}.theme-toggle:hover{background-color:var(--background)}.add-btn{background-color:var(--primary);color:#fff;border:none;border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .3s ease;font-size:18px}.add-btn:hover{background-color:var(--primary-dark);transform:scale(1.05)}.categories{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap}.category-btn{padding:8px 16px;background-color:var(--card-bg);border:1px solid var(--border);border-radius:20px;font-size:14px;cursor:pointer;transition:all .3s ease;display:flex;align-items:center;gap:6px;color:var(--text-primary)}.category-btn:hover,.category-btn.active{background-color:var(--primary);color:#fff;border-color:var(--primary)}.tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px}.tool-card{background-color:var(--card-bg);border-radius:12px;overflow:hidden;box-shadow:0 4px 12px var(--shadow);transition:all .3s ease;display:flex;flex-direction:column;height:100%}.tool-card:hover{transform:translateY(-5px);box-shadow:0 10px 20px rgba(0,0,0,0.15)}.tool-header{padding:20px;display:flex;align-items:center;gap:15px;border-bottom:1px solid var(--border)}.tool-icon{width:50px;height:50px;border-radius:10px;background-color:rgba(67,97,238,0.1);display:flex;align-items:center;justify-content:center;font-size:24px;color:var(--primary)}.tool-title{font-size:18px;font-weight:600;margin-bottom:4px;color:var(--text-primary)}.tool-category{display:inline-block;padding:3px 10px;background-color:rgba(67,97,238,0.1);color:var(--primary);border-radius:12px;font-size:12px;font-weight:500}.tool-body{padding:20px;flex-grow:1;display:flex;flex-direction:column}.tool-description{color:var(--text-secondary);margin-bottom:15px;flex-grow:1}.tool-invocation{background-color:var(--background);padding:12px;border-radius:8px;font-family:'Courier New',monospace;font-size:14px;color:var(--text-primary);word-break:break-word;position:relative;margin-bottom:15px}.copy-btn{position:absolute;top:8px;right:8px;background:none;border:none;color:var(--text-secondary);cursor:pointer;transition:color .3s ease}.copy-btn:hover{color:var(--primary)}.tool-actions{display:flex;justify-content:center}.launch-btn{width:100%;padding:12px;border:none;border-radius:8px;font-size:16px;font-weight:500;cursor:pointer;transition:all .3s ease;display:flex;align-items:center;justify-content:center;gap:8px;background-color:var(--primary);color:#fff}.launch-btn:hover{background-color:var(--primary-dark)}.no-results{text-align:center;padding:60px 20px;color:var(--text-secondary)}.no-results i{font-size:48px;margin-bottom:20px;color:var(--text-secondary)}.notification{position:fixed;bottom:20px;right:20px;background-color:var(--success);color:#fff;padding:15px 20px;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.15);display:flex;align-items:center;gap:10px;transform:translateY(100px);opacity:0;transition:all .3s ease;z-index:1000}.notification.show{transform:translateY(0);opacity:1}.modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background-color:var(--modal-overlay);display:flex;align-items:center;justify-content:center;z-index:1000;opacity:0;visibility:hidden;transition:all .3s ease}.modal-overlay.active{opacity:1;visibility:visible}.modal{background-color:var(--card-bg);border-radius:12px;width:90%;max-width:500px;max-height:90vh;overflow-y:auto;box-shadow:0 10px 30px rgba(0,0,0,0.2);transform:scale(0.8);transition:transform .3s ease}.modal-overlay.active .modal{transform:scale(1)}.modal-header{padding:20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}.modal-title{font-size:20px;font-weight:600;color:var(--text-primary)}.close-btn{background:none;border:none;font-size:20px;color:var(--text-secondary);cursor:pointer;transition:color .3s ease}.close-btn:hover{color:var(--warning)}.modal-body{padding:20px}.form-group{margin-bottom:20px}.form-label{display:block;margin-bottom:8px;font-weight:500;color:var(--text-primary)}.form-input,.form-textarea,.form-select{width:100%;padding:12px;border:1px solid var(--border);border-radius:8px;font-size:16px;background-color:var(--background);color:var(--text-primary);transition:all .3s ease}.form-input:focus,.form-textarea:focus,.form-select:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(67,97,238,0.2)}.form-textarea{resize:vertical;min-height:100px}.modal-footer{padding:20px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:10px}.btn{padding:10px 20px;border:none;border-radius:8px;font-size:16px;font-weight:500;cursor:pointer;transition:all .3s ease}.btn-primary{background-color:var(--primary);color:#fff}.btn-primary:hover{background-color:var(--primary-dark)}.btn-secondary{background-color:var(--background);color:var(--text-primary);border:1px solid var(--border)}.btn-secondary:hover{background-color:var(--border)}@media(max-width:768px){.header-content{flex-direction:column;align-items:stretch}.search-container{max-width:100%}.tools-grid{grid-template-columns:1fr}}
+	:root{--primary:#4361ee;--primary-dark:#3a56d4;--secondary:#3f37c9;--background:#f8f9fa;--card-bg:#fff;--text-primary:#212529;--text-secondary:#6c757d;--border:#e9ecef;--shadow:rgba(0,0,0,0.1);--success:#4cc9f0;--warning:#f72585;--modal-overlay:rgba(0,0,0,0.5)}[data-theme=dark]{--primary:#5e72e4;--primary-dark:#4c63d2;--secondary:#825ee4;--background:#1a1d29;--card-bg:#252836;--text-primary:#f8f9fa;--text-secondary:#adb5bd;--border:#343946;--shadow:rgba(0,0,0,0.3);--success:#1de9b6;--warning:#f5365c;--modal-overlay:rgba(0,0,0,0.7)}*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif}body{background-color:var(--background);color:var(--text-primary);line-height:1.6;transition:background-color .3s ease,color .3s ease}.container{max-width:1400px;margin:0 auto;padding:20px}header{background-color:var(--card-bg);box-shadow:0 2px 10px var(--shadow);padding:15px 0;margin-bottom:20px;position:sticky;top:0;z-index:100;transition:background-color .3s ease}.header-content{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:15px}.logo{display:flex;align-items:center;gap:10px}.logo i{font-size:22px;color:var(--primary)}.logo h1{font-size:20px;font-weight:600;color:var(--primary)}.search-container{position:relative;width:100%;max-width:450px}.search-box{width:100%;padding:10px 20px 10px 40px;border:1px solid var(--border);border-radius:30px;font-size:15px;transition:all .3s ease;background-color:var(--background);color:var(--text-primary)}.search-box:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(67,97,238,0.2)}.search-icon{position:absolute;left:15px;top:50%;transform:translateY(-50%);color:var(--text-secondary)}.header-controls{display:flex;align-items:center;gap:15px}.stats{display:flex;gap:15px;align-items:center}.stat-item{display:flex;flex-direction:column;align-items:center}.stat-value{font-size:18px;font-weight:600;color:var(--primary)}.stat-label{font-size:11px;color:var(--text-secondary)}.theme-toggle{background:none;border:none;color:var(--text-primary);cursor:pointer;font-size:18px;padding:5px;border-radius:50%;transition:all .3s ease}.theme-toggle:hover{background-color:var(--background)}.view-toggle{background:none;border:none;color:var(--text-primary);cursor:pointer;font-size:18px;padding:5px;border-radius:50%;transition:all .3s ease}.view-toggle:hover{background-color:var(--background)}.add-btn{background-color:var(--primary);color:#fff;border:none;border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .3s ease;font-size:18px}.add-btn:hover{background-color:var(--primary-dark);transform:scale(1.05)}.categories{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap}.category-btn{padding:8px 16px;background-color:var(--card-bg);border:1px solid var(--border);border-radius:20px;font-size:14px;cursor:pointer;transition:all .3s ease;display:flex;align-items:center;gap:6px;color:var(--text-primary)}.category-btn:hover,.category-btn.active{background-color:var(--primary);color:#fff;border-color:var(--primary)}.tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px}.tools-list{display:flex;flex-direction:column;gap:15px}.tool-card{background-color:var(--card-bg);border-radius:12px;overflow:hidden;box-shadow:0 4px 12px var(--shadow);transition:all .3s ease;display:flex;flex-direction:column;height:100%}.tool-card:hover{transform:translateY(-5px);box-shadow:0 10px 20px rgba(0,0,0,0.15)}.tools-list .tool-card{flex-direction:row;align-items:center;height:auto}.tools-list .tool-header{flex:1;border-bottom:none;padding:15px 20px}.tools-list .tool-body{flex:2;display:flex;flex-direction:row;align-items:center;gap:20px;padding:15px 20px}.tools-list .tool-description{flex:1;margin-bottom:0}.tools-list .tool-invocation{flex:1;margin-bottom:0}.tools-list .tool-actions{flex:0 0 120px}.tool-header{padding:20px;display:flex;align-items:center;gap:15px;border-bottom:1px solid var(--border)}.tool-icon{width:50px;height:50px;border-radius:10px;background-color:rgba(67,97,238,0.1);display:flex;align-items:center;justify-content:center;font-size:24px;color:var(--primary)}.tool-title{font-size:18px;font-weight:600;margin-bottom:4px;color:var(--text-primary)}.tool-category{display:inline-block;padding:3px 10px;background-color:rgba(67,97,238,0.1);color:var(--primary);border-radius:12px;font-size:12px;font-weight:500}.tool-body{padding:20px;flex-grow:1;display:flex;flex-direction:column}.tool-description{color:var(--text-secondary);margin-bottom:15px;flex-grow:1}.tool-invocation{background-color:var(--background);padding:12px;border-radius:8px;font-family:'Courier New',monospace;font-size:14px;color:var(--text-primary);word-break:break-word;position:relative;margin-bottom:15px}.copy-btn{position:absolute;top:8px;right:8px;background:none;border:none;color:var(--text-secondary);cursor:pointer;transition:color .3s ease}.copy-btn:hover{color:var(--primary)}.tool-actions{display:flex;justify-content:center}.launch-btn{width:100%;padding:12px;border:none;border-radius:8px;font-size:16px;font-weight:500;cursor:pointer;transition:all .3s ease;display:flex;align-items:center;justify-content:center;gap:8px;background-color:var(--primary);color:#fff}.launch-btn:hover{background-color:var(--primary-dark)}.no-results{text-align:center;padding:60px 20px;color:var(--text-secondary)}.no-results i{font-size:48px;margin-bottom:20px;color:var(--text-secondary)}.notification{position:fixed;bottom:20px;right:20px;background-color:var(--success);color:#fff;padding:15px 20px;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.15);display:flex;align-items:center;gap:10px;transform:translateY(100px);opacity:0;transition:all .3s ease;z-index:1000}.notification.show{transform:translateY(0);opacity:1}.modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background-color:var(--modal-overlay);display:flex;align-items:center;justify-content:center;z-index:1000;opacity:0;visibility:hidden;transition:all .3s ease}.modal-overlay.active{opacity:1;visibility:visible}.modal{background-color:var(--card-bg);border-radius:12px;width:90%;max-width:500px;max-height:90vh;overflow-y:auto;box-shadow:0 10px 30px rgba(0,0,0,0.2);transform:scale(0.8);transition:transform .3s ease}.modal-overlay.active .modal{transform:scale(1)}.modal-header{padding:20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}.modal-title{font-size:20px;font-weight:600;color:var(--text-primary)}.close-btn{background:none;border:none;font-size:20px;color:var(--text-secondary);cursor:pointer;transition:color .3s ease}.close-btn:hover{color:var(--warning)}.modal-body{padding:20px}.form-group{margin-bottom:20px}.form-label{display:block;margin-bottom:8px;font-weight:500;color:var(--text-primary)}.form-input,.form-textarea,.form-select{width:100%;padding:12px;border:1px solid var(--border);border-radius:8px;font-size:16px;background-color:var(--background);color:var(--text-primary);transition:all .3s ease}.form-input:focus,.form-textarea:focus,.form-select:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(67,97,238,0.2)}.form-textarea{resize:vertical;min-height:100px}.modal-footer{padding:20px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:10px}.btn{padding:10px 20px;border:none;border-radius:8px;font-size:16px;font-weight:500;cursor:pointer;transition:all .3s ease}.btn-primary{background-color:var(--primary);color:#fff}.btn-primary:hover{background-color:var(--primary-dark)}.btn-secondary{background-color:var(--background);color:var(--text-primary);border:1px solid var(--border)}.btn-secondary:hover{background-color:var(--border)}@media(max-width:768px){.header-content{flex-direction:column;align-items:stretch}.search-container{max-width:100%}.tools-grid{grid-template-columns:1fr}.tools-list .tool-card{flex-direction:column}.tools-list .tool-body{flex-direction:column;align-items:stretch;gap:15px}.tools-list .tool-actions{flex:1}
 ]]>
 	</data>
 }
@@ -145,15 +148,11 @@ ClassMethod GetToolsList() [ CodeMode = expression ]
 
 ClassMethod Scripts()
 {
-
-	&HTML<
+    &HTML<
 	<script language="javascript">
-        // Sample data structure (replace with your actual data)
-        //const toolsData =
-
         // DOM elements
         const searchInput = document.getElementById('search');
-        const toolsGrid = document.getElementById('tools-grid');
+        const toolsContainer = document.getElementById('tools-container');
         const categoriesContainer = document.getElementById('categories');
         const noResults = document.getElementById('no-results');
         const totalToolsElement = document.getElementById('total-tools');
@@ -161,6 +160,7 @@ ClassMethod Scripts()
         const notification = document.getElementById('notification');
         const notificationMessage = document.getElementById('notification-message');
         const themeToggle = document.getElementById('theme-toggle');
+        const viewToggle = document.getElementById('view-toggle');
         const addToolBtn = document.getElementById('add-tool-btn');
         const addToolModal = document.getElementById('add-tool-modal');
         const closeModalBtn = document.getElementById('close-modal');
@@ -180,6 +180,7 @@ ClassMethod Scripts()
         console.log(toolsData);
         let filteredTools = [...toolsData];
         let activeCategory = 'all';
+        let currentView = 'grid'; // Default view is grid
 
         // Initialize the app
         function init() {
@@ -190,6 +191,7 @@ ClassMethod Scripts()
             // Event listeners
             searchInput.addEventListener('input', handleSearch);
             themeToggle.addEventListener('click', toggleTheme);
+            viewToggle.addEventListener('click', toggleView);
             addToolBtn.addEventListener('click', openAddToolModal);
             closeModalBtn.addEventListener('click', closeAddToolModal);
             cancelBtn.addEventListener('click', closeAddToolModal);
@@ -212,7 +214,7 @@ ClassMethod Scripts()
 
         // Render tools
         function renderTools() {
-            toolsGrid.innerHTML = '';
+            toolsContainer.innerHTML = '';
 
             if (filteredTools.length === 0) {
                 noResults.style.display = 'block';
@@ -223,7 +225,7 @@ ClassMethod Scripts()
 
             filteredTools.forEach(tool => {
                 const toolCard = createToolCard(tool);
-                toolsGrid.appendChild(toolCard);
+                toolsContainer.appendChild(toolCard);
             });
         }
 
@@ -372,6 +374,21 @@ ClassMethod Scripts()
             }
         }
 
+        // Toggle between grid and list view
+        function toggleView() {
+            if (currentView === 'grid') {
+                currentView = 'list';
+                toolsContainer.classList.remove('tools-grid');
+                toolsContainer.classList.add('tools-list');
+                viewToggle.innerHTML = '<i class="fas fa-th"></i>';
+            } else {
+                currentView = 'grid';
+                toolsContainer.classList.remove('tools-list');
+                toolsContainer.classList.add('tools-grid');
+                viewToggle.innerHTML = '<i class="fas fa-list"></i>';
+            }
+        }
+
         // Open add tool modal
         function openAddToolModal() {
             addToolModal.classList.add('active');
@@ -415,9 +432,9 @@ ClassMethod Scripts()
 
             res = #server(..SaveNewTool(JSON.stringify(newTool)))#;
             if (res!=1) {
-	            alert(res);
-	            closeAddToolModal();
-	            return;
+                alert(res);
+                closeAddToolModal();
+                return;
             }
             toolsData.push(newTool);
             // Update UI
@@ -484,6 +501,7 @@ ClassMethod Scripts()
         // Initialize the app when DOM is loaded
         document.addEventListener('DOMContentLoaded', init);
     </script>
+
 	>
 }
 
