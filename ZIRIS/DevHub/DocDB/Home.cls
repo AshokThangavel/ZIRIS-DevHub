@@ -14,23 +14,185 @@ ClassMethod OnPageHEAD() As %Boolean
 	Return $$$OK
 }
 /// Setup your ServerInformation here
+ClassMethod OnRenderScreen() As %Status
+{
+	&HTML<
+
+<body>
+    <div class="header">
+        <h1>Document Database Explorer</h1>
+    </div>
+
+    <div class="main-container">
+        <div class="left-panel">
+            <!--h2>Namespaces & Document Databases</h2-->
+            <button id="newDocdbBtn" class="new-docdb-btn">+ New DocDB</button>
+            <ul id="namespaceTree" class="tree-view">
+                <!-- Tree will be populated by JavaScript -->
+            </ul>
+        </div>
+
+        <div class="right-panel">
+            <div id="welcomeMessage" class="welcome-message">
+                <h2>Welcome to Document Database Explorer</h2>
+                <p>Select a document database from the left panel to view its properties and fetch documents.</p>
+            </div>
+
+            <div id="detailsPanel" style="display: none;">
+                <div class="container">
+                    <h3 id="selectedDocdbTitle">Document Database Properties</h3>
+
+                    <div class="properties-container">
+                        <div class="properties-header">
+                            <h4>Properties</h4>
+                            <button id="propertiesToggle" class="properties-toggle">
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                        </div>
+                        <div id="propertiesContent" class="collapsed">
+                            <table class="properties-table" id="propertiesTable">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Type</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="docId">Document ID:</label>
+                        <input type="text" id="docId" placeholder="Enter document ID">
+                        <div class="button-group">
+                            <button id="fetchButton">Fetch Document</button>
+                            <button id="addDocumentBtn">Add Document</button>
+                        </div>
+                        <span id="loadingIndicator" class="loading" style="display: none;"></span>
+                    </div>
+
+                    <div class="error-message" id="errorMessage"></div>
+                    <div class="success-message" id="successMessage"></div>
+
+                    <div class="result-container" id="resultContainer" style="display: none;">
+                        <h3>Document Result</h3>
+                        <pre id="resultContent"></pre>
+                        <div class="edit-hint">Double-click on the document to edit</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for creating new DocDB -->
+    <div id="newDocdbModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Create New Document Database</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="form-group">
+                <label for="newDocdbName">DocDB Name:</label>
+                <input type="text" id="newDocdbName" placeholder="Enter document database name">
+            </div>
+            <div class="form-group">
+                <label for="newDocdbNamespace">Namespace:</label>
+                <select id="newDocdbNamespace">
+                    <option value="">-- Select Namespace --</option>
+                </select>
+            </div>
+            <div class="modal-footer">
+                <button id="cancelCreateBtn" class="btn-secondary">Cancel</button>
+                <button id="confirmCreateBtn">Create</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for adding new document -->
+    <div id="addDocumentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add New Document</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="form-group">
+                <label for="documentData">Document Data (JSON):</label>
+                <textarea id="documentData" placeholder='Enter JSON data, for example:
+{
+  "name": "Example Document",
+  "description": "This is an example document",
+  "created": "2023-05-15",
+  "tags": ["example", "test"]
+}'></textarea>
+            </div>
+            <div class="modal-footer">
+                <button id="cancelAddDocumentBtn" class="btn-secondary">Cancel</button>
+                <button id="confirmAddDocumentBtn">Save Document</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for editing document -->
+    <div id="editDocumentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Document</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="form-group">
+                <label for="editDocumentData">Document Data (JSON):</label>
+                <textarea id="editDocumentData"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button id="cancelEditDocumentBtn" class="btn-secondary">Cancel</button>
+                <button id="confirmEditDocumentBtn">Update Document</button>
+            </div>
+        </div>
+    </div>
+</body>
+	>
+}
+
+ClassMethod EnableDocDBService()
+{
+	New $NAMESPACE
+	Set $NAMESPACE="%SYS"
+	do ##class(Security.Services).Get("%Service_DocDB", .svc)
+	If svc("Enabled")=0 {
+		Set svc("Enabled")=1
+		do ##class(Security.Services).Modify("%Service_DocDB", .svc)
+	}
+	Return $$$OK
+}
+
+ClassMethod CreateSampleDocDB()
+{
+	New $NAMESPACE
+	Set $NAMESPACE="USER"
+	Do ##class(%SYSTEM.DocDB).CreateDatabase("test.docdb")
+	Set myoref = $ClassMethod("test.docdb","%New")
+	SET test = ["Anne","Bradford","Charles","Deborah"]
+	Set myoref.%Doc=test
+	Set st = myoref.%Save()
+}
 ClassMethod GetServerInfo() As %String
 {
-	Set sc=##class(%RoutineMgr).GetWebServerPort(.Port,.Server,.URLPrefix,.URL)
+	Set sc = ##class(%RoutineMgr).GetWebServerPort(.Port,.Server,.URLPrefix,.URL)
 	Set hostIP = ##class(%SYSTEM.Util).GetEnviron("HOST_IP")
+	Set:$Data(^ZIRIS.Docker.DocDB) hostIP = "localhost"
 	If hostIP'="" {
-		Set ServerInfo = $Piece(URL,"//")_"//"_hostIP_$Select(Port'="":":"_Port,1:"")
+		Set ServerInfo = $Piece(URL,"//")_"//"_hostIP_$Select(Port'="": ":"_Port,1: "")
 	}
 	Else {
 		If URL'[":"{
-			Set ServerInfo = $E(URL,1,*-1)_":"_Port
+			Set ServerInfo = $Extract(URL,1,*-1)_":"_Port
 		}
-		Set ServerInfo = $E(URL,1,*-1)
+		Set ServerInfo = $Extract(URL,1,*-1)
 	}
 	Return ServerInfo
 }
 
-/// Write your javascripts here within &HTML< ... >
 ClassMethod Scripts()
 {
 	&HTML<
@@ -315,7 +477,7 @@ ClassMethod Scripts()
             hideMessages();
 
             try {
-                const response = await fetch(`${baseUrl}v1/${encodeURIComponent(namespace)}/db/${docdb}`);
+                const response = await fetch(`${baseUrl}v1/${encodeURIComponent(namespace)}/db/${encodeURIComponent(docdb)}`);
                 if (!response.ok) throw new Error('Failed to load document database properties');
 
                 const data = await response.json();
@@ -362,7 +524,7 @@ ClassMethod Scripts()
 
             try {
 
-                const response = await fetch(`${baseUrl}v1/${encodeURIComponent(selectedNamespace)}/doc/${selectedDocdb}/${docId}`);
+                const response = await fetch(`${baseUrl}v1/${encodeURIComponent(selectedNamespace)}/doc/${encodeURIComponent(selectedDocdb)}/${docId}`);
                 if (!response.ok) throw new Error('Failed to fetch document');
 
                 const data = await response.json();
@@ -402,15 +564,24 @@ ClassMethod Scripts()
             }
 
             try {
-
-                const response = await fetch(`${baseUrl}v1/${encodeURIComponent(namespace)}/db/${docdbName}`, {
+                const response = await fetch(`${baseUrl}v1/${encodeURIComponent(namespace)}/db/${encodeURIComponent(docdbName)}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     }
                 });
-
-                if (!response.ok) throw new Error('Failed to create document database');
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    let errorMessage = 'Failed to create document database';
+                    // Extract error message from response
+                    if (errorData.status && errorData.status.summary) {
+                        errorMessage = decodeHTMLEntities(errorData.status.summary);
+                    } else if (errorData.status && errorData.status.errors && errorData.status.errors.length > 0) {
+                        errorMessage = decodeHTMLEntities(errorData.status.errors[0].error);
+                    }
+                    alert(errorMessage);
+                    throw new Error(errorMessage);
+                }
 
                 // Close the modal
                 closeNewDocdbModal();
@@ -441,8 +612,6 @@ ClassMethod Scripts()
                         toggle.innerHTML = '<i class="fas fa-chevron-down"></i>';
                     }
                 }
-
-                // Show success message
                 showSuccess(`Document database "${docdbName}" created successfully in namespace "${namespace}"`);
             } catch (error) {
                 showError(`Error creating document database: ${error.message}`);
@@ -484,8 +653,7 @@ ClassMethod Scripts()
             }
 
             try {
-
-                const response = await fetch(`${baseUrl}v1/${encodeURIComponent(selectedNamespace)}/doc/${selectedDocdb}/`, {
+                const response = await fetch(`${baseUrl}v1/${encodeURIComponent(selectedNamespace)}/doc/${encodeURIComponent(selectedDocdb)}/`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -552,7 +720,7 @@ ClassMethod Scripts()
             }
 
             try {
-                const response = await fetch(`${baseUrl}v1/${encodeURIComponent(selectedNamespace)}/doc/${selectedDocdb}/${currentDocId}`, {
+                const response = await fetch(`${baseUrl}v1/${encodeURIComponent(selectedNamespace)}/doc/${encodeURIComponent(selectedDocdb)}/${currentDocId}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'
@@ -598,6 +766,7 @@ ClassMethod Scripts()
 	>
 }
 
+/// Write your javascripts here within &HTML< ... >
 XData Style
 {
 <data>
@@ -607,167 +776,5 @@ XData Style
 </data>
 }
 
-ClassMethod OnRenderScreen() As %Status
-{
-	&HTML<
-
-<body>
-    <div class="header">
-        <h1>Document Database Explorer</h1>
-    </div>
-
-    <div class="main-container">
-        <div class="left-panel">
-            <!--h2>Namespaces & Document Databases</h2-->
-            <button id="newDocdbBtn" class="new-docdb-btn">+ New DocDB</button>
-            <ul id="namespaceTree" class="tree-view">
-                <!-- Tree will be populated by JavaScript -->
-            </ul>
-        </div>
-
-        <div class="right-panel">
-            <div id="welcomeMessage" class="welcome-message">
-                <h2>Welcome to Document Database Explorer</h2>
-                <p>Select a document database from the left panel to view its properties and fetch documents.</p>
-            </div>
-
-            <div id="detailsPanel" style="display: none;">
-                <div class="container">
-                    <h3 id="selectedDocdbTitle">Document Database Properties</h3>
-
-                    <div class="properties-container">
-                        <div class="properties-header">
-                            <h4>Properties</h4>
-                            <button id="propertiesToggle" class="properties-toggle">
-                                <i class="fas fa-chevron-down"></i>
-                            </button>
-                        </div>
-                        <div id="propertiesContent" class="collapsed">
-                            <table class="properties-table" id="propertiesTable">
-                                <thead>
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>Type</th>
-                                    </tr>
-                                </thead>
-                                <tbody></tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="docId">Document ID:</label>
-                        <input type="text" id="docId" placeholder="Enter document ID">
-                        <div class="button-group">
-                            <button id="fetchButton">Fetch Document</button>
-                            <button id="addDocumentBtn">Add Document</button>
-                        </div>
-                        <span id="loadingIndicator" class="loading" style="display: none;"></span>
-                    </div>
-
-                    <div class="error-message" id="errorMessage"></div>
-                    <div class="success-message" id="successMessage"></div>
-
-                    <div class="result-container" id="resultContainer" style="display: none;">
-                        <h3>Document Result</h3>
-                        <pre id="resultContent"></pre>
-                        <div class="edit-hint">Double-click on the document to edit</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal for creating new DocDB -->
-    <div id="newDocdbModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Create New Document Database</h2>
-                <span class="close">&times;</span>
-            </div>
-            <div class="form-group">
-                <label for="newDocdbName">DocDB Name:</label>
-                <input type="text" id="newDocdbName" placeholder="Enter document database name">
-            </div>
-            <div class="form-group">
-                <label for="newDocdbNamespace">Namespace:</label>
-                <select id="newDocdbNamespace">
-                    <option value="">-- Select Namespace --</option>
-                </select>
-            </div>
-            <div class="modal-footer">
-                <button id="cancelCreateBtn" class="btn-secondary">Cancel</button>
-                <button id="confirmCreateBtn">Create</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal for adding new document -->
-    <div id="addDocumentModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Add New Document</h2>
-                <span class="close">&times;</span>
-            </div>
-            <div class="form-group">
-                <label for="documentData">Document Data (JSON):</label>
-                <textarea id="documentData" placeholder='Enter JSON data, for example:
-{
-  "name": "Example Document",
-  "description": "This is an example document",
-  "created": "2023-05-15",
-  "tags": ["example", "test"]
-}'></textarea>
-            </div>
-            <div class="modal-footer">
-                <button id="cancelAddDocumentBtn" class="btn-secondary">Cancel</button>
-                <button id="confirmAddDocumentBtn">Save Document</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal for editing document -->
-    <div id="editDocumentModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Edit Document</h2>
-                <span class="close">&times;</span>
-            </div>
-            <div class="form-group">
-                <label for="editDocumentData">Document Data (JSON):</label>
-                <textarea id="editDocumentData"></textarea>
-            </div>
-            <div class="modal-footer">
-                <button id="cancelEditDocumentBtn" class="btn-secondary">Cancel</button>
-                <button id="confirmEditDocumentBtn">Update Document</button>
-            </div>
-        </div>
-    </div>
-</body>
-	>
-}
-
-ClassMethod EnableDocDBService()
-{
-	New $NAMESPACE
-	Set $NAMESPACE="%SYS"
-	do ##class(Security.Services).Get("%Service_DocDB", .svc)
-	If svc("Enabled")=0 {
-		Set svc("Enabled")=1
-		do ##class(Security.Services).Modify("%Service_DocDB", .svc)
-	}
-	Return $$$OK
-}
-
-ClassMethod CreateSampleDocDB()
-{
-	New $NAMESPACE
-	Set $NAMESPACE="USER"
-	Do ##class(%SYSTEM.DocDB).CreateDatabase("test.docdb")
-	Set myoref = $ClassMethod("test.docdb","%New")
-	SET test = ["Anne","Bradford","Charles","Deborah"]
-	Set myoref.%Doc=test
-	Set st = myoref.%Save()
-}
 
 }
